@@ -1,4 +1,4 @@
-function calculator (input) {
+window.calculator = function (input) {
   const display = document.getElementById('inputDisplay')
   const result = document.getElementById('resultDisplay')
 
@@ -30,7 +30,7 @@ function calculator (input) {
       }
       break
 
-    default:
+    default: {
       if (display.innerHTML === '0' && !isNaN(input)) {
         display.innerHTML = input
       } else {
@@ -43,6 +43,7 @@ function calculator (input) {
         display.innerHTML = Number(numericValue).toLocaleString('en-US')
       }
       break
+    }
   }
 }
 
