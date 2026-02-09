@@ -1,6 +1,6 @@
 window.calculator = function (input) {
-  const display = document.getElementById('inputDisplay')
-  const result = document.getElementById('resultDisplay')
+  const display = document.getElementById('input-display')
+  const result = document.getElementById('result-display')
 
   switch (input) {
     case 'C':
@@ -9,31 +9,38 @@ window.calculator = function (input) {
       break
 
     case '+/-':
-      if (display.innerHTML === '0') break
+      const lastChar = display.innerHTML.slice(-1)
+        if (isNaN(lastChar)) break
 
-      if (display.innerHTML.startsWith('-')) {
-        display.innerHTML = display.innerHTML.slice(1)
-      } else {
-        display.innerHTML = '-' + display.innerHTML
-      }
+      display.innerHTML =
+        display.innerHTML.startsWith('-')
+          ? display.innerHTML.slice(1)
+          : '-' + display.innerHTML
       break
+
 
     case '=':
       try {
-        const calculated = evaluateExpression(display.innerHTML)
+        const rawExpress = display.innerHTML.replace(/,/g, '')
+        const calculated = evaluateExpression(rawExpress)
 
         if (!isFinite(calculated)) throw new Error()
 
-        result.innerHTML = calculated.toLocaleString('en-US')
+        result.innerHTML = Number(calculated).toLocaleString('en-US')
       } catch {
         result.innerHTML = 'ERROR'
       }
       break
 
     default: {
+      const lastChar = display.innerHTML.slice(-1)
+
+      if (isNaN(input) && isNaN(lastChar)) return
+
       if (display.innerHTML === '0' && !isNaN(input)) {
         display.innerHTML = input
-      } else {
+      } 
+      else {
         display.innerHTML += input
       }
 
@@ -49,8 +56,11 @@ window.calculator = function (input) {
 
 function evaluateExpression (expression) {
   expression = expression.replace(/×/g, '*').replace(/÷/g, '/')
+  if (expression.startsWith('-')) {
+    expression = '0' + expression
+  }
 
-  const tokens = expression.match(/(\d+(\.\d+)?|[+\-*/])/g)
+  const tokens = expression.match(/-?(\d+(\.\d+)?|[+\-*/])/g)
   if (!tokens) return NaN
 
   const values = []
@@ -102,5 +112,5 @@ function evaluateExpression (expression) {
 }
 
 window.onload = function () {
-  document.getElementById('inputDisplay').innerHTML = '0'
+  document.getElementById('input-display').innerHTML = '0'
 }
