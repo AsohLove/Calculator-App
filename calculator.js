@@ -8,17 +8,16 @@ window.calculator = function (input) {
       result.innerHTML = ''
       break
 
-    case '+/-':
+    case '+/-': {
       const lastChar = display.innerHTML.slice(-1)
-        if (isNaN(lastChar)) break
+      if (isNaN(lastChar)) break
 
       display.innerHTML =
         display.innerHTML.startsWith('-')
           ? display.innerHTML.slice(1)
           : '-' + display.innerHTML
       break
-
-
+    }
     case '=':
       try {
         const rawExpress = display.innerHTML.replace(/,/g, '')
@@ -39,8 +38,7 @@ window.calculator = function (input) {
 
       if (display.innerHTML === '0' && !isNaN(input)) {
         display.innerHTML = input
-      } 
-      else {
+      } else {
         display.innerHTML += input
       }
 
