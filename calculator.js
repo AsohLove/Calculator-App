@@ -58,7 +58,7 @@ function evaluateExpression (expression) {
     expression = '0' + expression
   }
 
-  const tokens = expression.match(/-?(\d+(\.\d+)?|[+\-*/])/g)
+  const tokens = expression.match(/\d+(\.\d+)?|[+\-*/]/g)
   if (!tokens) return NaN
 
   const values = []
