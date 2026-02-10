@@ -84,9 +84,9 @@ The project follows the frontend structure below;
 
 * :rocket: [Deployed page](https://asohlove.github.io/Calculator-App/)
 
-### :fire:
 
-**Love Asoh**
+
+:fire: **Love Asoh**
 
 - GitHub: [@loveasoh](https://github.com/AsohLove)
 - Twitter: [@loveasoh](https://x.com/LoveTheModifier)
