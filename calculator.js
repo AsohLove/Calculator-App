@@ -3,11 +3,13 @@ window.calculator = function (input) {
   const result = document.getElementById('result-display')
 
   switch (input) {
-    case 'C':
+    case 'AC':
       display.innerHTML = '0'
       result.innerHTML = ''
       break
-
+    case 'C':
+      display.innerHTML = display.innerHTML.slice(0, -1)
+      break
     case '+/-': {
       const lastChar = display.innerHTML.slice(-1)
       if (isNaN(lastChar)) break
