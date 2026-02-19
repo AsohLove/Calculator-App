@@ -1,3 +1,6 @@
+let lastResult = null
+let justCalculated = false
+
 window.calculator = function (input) {
   const display = document.getElementById('input-display')
   const result = document.getElementById('result-display')
@@ -14,10 +17,9 @@ window.calculator = function (input) {
       const lastChar = display.innerHTML.slice(-1)
       if (isNaN(lastChar)) break
 
-      display.innerHTML =
-        display.innerHTML.startsWith('-')
-          ? display.innerHTML.slice(1)
-          : '-' + display.innerHTML
+      display.innerHTML = display.innerHTML.startsWith('-')
+        ? display.innerHTML.slice(1)
+        : '-' + display.innerHTML
       break
     }
     case '=':
@@ -27,14 +29,31 @@ window.calculator = function (input) {
 
         if (!isFinite(calculated)) throw new Error()
 
+        lastResult = calculated
+        justCalculated = true
+
         result.innerHTML = Number(calculated).toLocaleString('en-US')
       } catch {
-        result.innerHTML = 'ERROR'
+        result.innerHTML = 'Error'
       }
       break
 
     default: {
+      const operators = ['+', '-', '×', '÷']
       const lastChar = display.innerHTML.slice(-1)
+
+      if (justCalculated) {
+        if (operators.includes(input)) {
+          display.innerHTML =
+            Number(lastResult).toLocaleString('en-US') + input
+        } else if (!isNaN(input)) {
+          display.innerHTML = input
+          result.innerHTML = ''
+        }
+
+        justCalculated = false
+        break
+      }
 
       if (isNaN(input) && isNaN(lastChar)) return
 
@@ -49,6 +68,7 @@ window.calculator = function (input) {
       if (!isNaN(numericValue)) {
         display.innerHTML = Number(numericValue).toLocaleString('en-US')
       }
+
       break
     }
   }
