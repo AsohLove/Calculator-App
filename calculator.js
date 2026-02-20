@@ -1,136 +1,163 @@
-let lastResult = null
-let justCalculated = false
+let lastResult = null;
+let justCalculated = false;
 
 window.calculator = function (input) {
-  const display = document.getElementById('input-display')
-  const result = document.getElementById('result-display')
+  const display = document.getElementById("input-display");
+  const result = document.getElementById("result-display");
 
   switch (input) {
-    case 'AC':
-      display.innerHTML = '0'
-      result.innerHTML = ''
-      break
-    case 'C':
-      display.innerHTML = display.innerHTML.slice(0, -1)
-      break
-    case '+/-': {
-      const lastChar = display.innerHTML.slice(-1)
-      if (isNaN(lastChar)) break
-
-      display.innerHTML = display.innerHTML.startsWith('-')
-        ? display.innerHTML.slice(1)
-        : '-' + display.innerHTML
-      break
-    }
-    case '=':
-      try {
-        const rawExpress = display.innerHTML.replace(/,/g, '')
-        const calculated = evaluateExpression(rawExpress)
-
-        if (!isFinite(calculated)) throw new Error()
-
-        lastResult = calculated
-        justCalculated = true
-
-        result.innerHTML = Number(calculated).toLocaleString('en-US')
-      } catch {
-        result.innerHTML = 'Error'
+    case "AC":
+      display.innerHTML = "0";
+      result.innerHTML = "";
+      break;
+    case "C":
+      display.innerHTML = display.innerHTML.slice(0, -1);
+      if (display.innerHTML === "") {
+        display.innerHTML = "0";
       }
-      break
+      break;
+    case "+/-": {
+      const lastChar = display.innerHTML.slice(-1);
+      if (isNaN(lastChar)) break;
+
+      display.innerHTML = display.innerHTML.startsWith("-")
+        ? display.innerHTML.slice(1)
+        : "-" + display.innerHTML;
+      break;
+    }
+    case "=":
+      try {
+        const rawExpress = display.innerHTML.replace(/,/g, "");
+        const calculated = evaluateExpression(rawExpress);
+
+        if (!isFinite(calculated)) throw new Error();
+
+        lastResult = calculated;
+        justCalculated = true;
+
+        result.innerHTML = Number(calculated).toLocaleString("en-US");
+      } catch {
+        result.innerHTML = "Error";
+      }
+      break;
+
+    case "%": {
+      const raw = display.innerHTML.replace(/,/g, "");
+
+      const match = raw.match(/(\d+\.?\d*)([+\-×÷])(\d+\.?\d*)$/);
+
+      if (!match) {
+        const value = parseFloat(raw);
+        if (!isNaN(value)) {
+          display.innerHTML = (value / 100).toString();
+        }
+        break;
+      }
+
+      const [, a, operator, b] = match;
+      const numA = parseFloat(a);
+      const numB = parseFloat(b);
+
+      const newValue =
+        operator === "+" || operator === "-" ? (numA * numB) / 100 : numB / 100;
+
+      display.innerHTML = a + operator + newValue;
+      break;
+    }
 
     default: {
-      const operators = ['+', '-', '×', '÷']
-      const lastChar = display.innerHTML.slice(-1)
+      const operators = ["+", "-", "×", "÷"];
+      const lastChar = display.innerHTML.slice(-1);
 
       if (justCalculated) {
         if (operators.includes(input)) {
           display.innerHTML =
-            Number(lastResult).toLocaleString('en-US') + input
+            Number(lastResult).toLocaleString("en-US") + input;
         } else if (!isNaN(input)) {
-          display.innerHTML = input
-          result.innerHTML = ''
+          display.innerHTML = input;
+          result.innerHTML = "";
         }
 
-        justCalculated = false
-        break
+        justCalculated = false;
+        break;
       }
 
-      if (isNaN(input) && isNaN(lastChar)) return
+      if (isNaN(input) && isNaN(lastChar)) return;
 
-      if (display.innerHTML === '0' && !isNaN(input)) {
-        display.innerHTML = input
+      if (display.innerHTML === "0" && !isNaN(input)) {
+        display.innerHTML = input;
       } else {
-        display.innerHTML += input
+        display.innerHTML += input;
       }
 
-      const numericValue = display.innerHTML.replace(/,/g, '')
+      const numericValue = display.innerHTML.replace(/,/g, "");
 
       if (!isNaN(numericValue)) {
-        display.innerHTML = Number(numericValue).toLocaleString('en-US')
+        display.innerHTML = Number(numericValue).toLocaleString("en-US");
       }
 
-      break
+      break;
     }
   }
-}
+};
 
-function evaluateExpression (expression) {
-  expression = expression.replace(/×/g, '*').replace(/÷/g, '/')
-  if (expression.startsWith('-')) {
-    expression = '0' + expression
+function evaluateExpression(expression) {
+  expression = expression.replace(/×/g, "*").replace(/÷/g, "/");
+  if (expression.startsWith("-")) {
+    expression = "0" + expression;
   }
 
-  const tokens = expression.match(/\d+(\.\d+)?|[+\-*/]/g)
-  if (!tokens) return NaN
+  const tokens = expression.match(/\d+(\.\d+)?|[+\-*/]/g);
+  if (!tokens) return NaN;
 
-  const values = []
-  const operators = []
+  const values = [];
+  const operators = [];
 
   for (const token of tokens) {
     if (!isNaN(token)) {
-      values.push(Number(token))
+      values.push(Number(token));
     } else {
-      operators.push(token)
+      operators.push(token);
     }
   }
 
   for (let i = 0; i < operators.length; i++) {
-    if (operators[i] === '*' || operators[i] === '/') {
-      const a = values[i]
-      const b = values[i + 1]
-      let temp
+    if (operators[i] === "*" || operators[i] === "/") {
+      const a = values[i];
+      const b = values[i + 1];
+      let temp;
 
       switch (operators[i]) {
-        case '*':
-          temp = a * b
-          break
-        case '/':
-          temp = a / b
-          break
+        case "*":
+          temp = a * b;
+          break;
+        case "/":
+          temp = a / b;
+          break;
       }
 
-      values.splice(i, 2, temp)
-      operators.splice(i, 1)
-      i--
+      values.splice(i, 2, temp);
+      operators.splice(i, 1);
+      i--;
     }
   }
 
-  let result = values[0]
+  let result = values[0];
 
   for (let i = 0; i < operators.length; i++) {
     switch (operators[i]) {
-      case '+':
-        result += values[i + 1]
-        break
-      case '-':
-        result -= values[i + 1]
-        break
+      case "+":
+        result += values[i + 1];
+        break;
+      case "-":
+        result -= values[i + 1];
+        break;
     }
   }
 
-  return result
+  return result;
 }
 
 window.onload = function () {
-  document.getElementById('input-display').innerHTML = '0'
-}
+  document.getElementById("input-display").innerHTML = "0";
+};
