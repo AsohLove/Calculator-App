@@ -1,0 +1,93 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background: url("./CalBack.jpg") no-repeat center center/cover;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 50%;
+  max-width: 400px;
+  background-color: black;
+  margin-top: 50px;
+  border-radius: 0;
+}
+
+.input-display {
+  width: 100%;
+  height: 15vh;
+  padding: 0 20px;
+  color: #fff;
+  font-size: 3rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  word-break: break-all;
+}
+
+.result-display {
+  width: 100%;
+  height: 15vh;
+  padding: 0 20px;
+  color: #fff;
+  font-size: 4rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  word-break: break-all;
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #333;
+  color: #fff;
+  font-size: 2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:active {
+  background-color: #555;
+}
+
+.btn-gray {
+  background-color: #a5a5a5;
+  color: #000;
+}
+
+.btn-gray:active {
+  background-color: #c5c5c5;
+}
+
+.btn-orange {
+  background-color: #ff9500;
+  color: #fff;
+}
+
+.btn-orange:active {
+  background-color: #ffb84d;
+}
